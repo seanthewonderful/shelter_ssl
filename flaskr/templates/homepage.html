@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}
+Animals for Adoption
+{% endblock %}
+
+{% block content %}
+<div class="magic-div" id="magic-div"></div>
+
+<a type="button" href="{{ url_for('user_init') }}">Users</a>
+<a type="button" href="{{ url_for('admin_init') }}">Administrators</a>
+{% endblock %}

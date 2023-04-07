@@ -1,0 +1,3 @@
+Create Flask server
+Model db tables with relationships
+Create routes for admins/users logins

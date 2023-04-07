@@ -2,8 +2,8 @@ from flaskr.model import db, connect_to_db, User, Admin, Animal
 from flaskr import app
 import os
 
-os.system("dropdb ssl_animal")
-os.system("createdb ssl_animal")
+os.system("dropdb ssl_adoption")
+os.system("createdb ssl_adoption")
 
 with app.app_context():
     db.create_all()
