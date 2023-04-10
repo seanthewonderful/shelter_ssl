@@ -8,7 +8,7 @@ Administrator Portal Entrance
 
 <div class="d-flex row">
 
-    <div class="container justify-content-md-center m-4">
+    <div class="container col justify-content-md-center m-4">
         <form method="POST" action="{{ url_for('register_admin') }}">
             <h3>Register a new Administrator</h3>
             {{ register_form.csrf_token }}
@@ -34,7 +34,7 @@ Administrator Portal Entrance
         </form>
     </div>
 
-    <div class="container justify-content-md-center m-4">
+    <div class="container col justify-content-md-center m-4">
         <form method="POST" action="{{ url_for('login_admin') }}">
             <h3>Login as an Administrator</h3>
             {{ login_form.csrf_token }}

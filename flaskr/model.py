@@ -12,8 +12,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     username = db.Column(db.String(50))
+    password = db.Column(db.String(250))
     email = db.Column(db.String(75))
-    password = db.Column(db.String(100))
     zipcode = db.Column(db.String(5), nullable=True)
     
     def __repr__(self) -> str:
@@ -27,8 +27,8 @@ class Admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     username = db.Column(db.String(50))
+    password = db.Column(db.String(250))
     email = db.Column(db.String(75))
-    password = db.Column(db.String(100))
     clearance = db.Column(db.String(25))
     
     def __repr__(self) -> str:
@@ -37,14 +37,16 @@ class Admin(UserMixin, db.Model):
 class Animal(db.Model):
     """The parent class, Animal"""
     
+    __tablename__ = "animals"
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     species = db.Column(db.String(50))
     name = db.Column(db.String(50))
-    age = db.Column(db.Integer)
+    gender = db.Column(db.String(10))
+    age = db.Column(db.Integer, nullable=True)
     description = db.Column(db.String(2000), nullable=True)
-    
-    # status = db.relationship("Status")
+    adoption_status = db.Column(db.String(), nullable=True)
 
     def __repr__(self) -> str:
         return super().__repr__()
