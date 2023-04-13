@@ -46,7 +46,7 @@ def create_user(username, email, password, zipcode):
 
 """Animals"""
 
-def create_animal(species, name, gender, age, description, adoption_status):
+def create_animal(species, name, gender, age, description, img_url):
     """Create a new Animal object and commit to DB"""
     
     new_animal = Animal(species=species,
@@ -54,12 +54,17 @@ def create_animal(species, name, gender, age, description, adoption_status):
                         gender=gender,
                         age=age,
                         description=description,
-                        adoption_status=adoption_status)
+                        img_url=img_url)
     
     db.session.add(new_animal)
     db.session.commit()
     
     return {'code': 'success', 'animal': new_animal}
+
+def get_all_animals():
+    """Returns all animals from db"""
+    
+    return Animal.query.all()
 
 def get_animal_by_id(animal_id):
     """Returns an Animal object from DB matching provided id"""

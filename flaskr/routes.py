@@ -1,8 +1,8 @@
-from flask import (Flask, render_template, redirect, request, url_for, flash)
+from flask import (Flask, render_template, redirect, request, url_for, flash, jsonify)
 from flask_login import (LoginManager, login_user, logout_user, login_required, current_user)
 from flaskr import app
 from flaskr.forms import (RegisterAdmin, RegisterUser, LoginForm, NewAnimalForm)
-import flaskr.crud
+import flaskr.crud as crud
 
 
 login_manager = LoginManager()
@@ -27,14 +27,14 @@ def register_animal():
     """Register a new animal to the DB"""
     
     species = request.form.get("species")
-    name = request.form.get("name", "None")
+    name = request.form.get("name", "")
     gender = request.form.get("gender")
     age = request.form.get("age", 0)
     description = request.form.get("description")
     adoption_status = request.form.get("adoption_status")
     
     print(type(age)) # --> it's a str
-    new_animal = flaskr.crud.create_animal(species=species,
+    new_animal = crud.create_animal(species=species,
                                            name=name,
                                            gender=gender,
                                            age=age,
@@ -67,7 +67,7 @@ def register_admin():
     email = request.form["email"]
     clearance = request.form["clearance"]
     
-    new_admin = flaskr.crud.create_admin(username=username,
+    new_admin = crud.create_admin(username=username,
                                         password=password,
                                         email=email,
                                         clearance=clearance)
@@ -104,7 +104,7 @@ def register_user():
     email = request.form["email"]
     zipcode = request.form["zipcode"]
     
-    new_user = flaskr.crud.create_user(username=username,
+    new_user = crud.create_user(username=username,
                                        password=password,
                                        email=email, 
                                        zipcode=zipcode)
@@ -124,12 +124,42 @@ def login_user():
     
     pass
 
+"""Animal data routes"""
+
+@app.route('/animals.json')
+def animals_json():
+    """Return all animals from db"""
+    
+    animals = crud.get_all_animals()
+    
+    return jsonify(animals)
+
+@app.route('/add-card', methods=["POST"])
+def add_card():
+    """Add a new card to the DB"""
+    
+    name = request.get_json().get("name")
+    species = request.get_json().get("species")
+    gender = request.get_json().get("gender")
+    age = request.get_json().get("age")
+    description = request.get_json().get("description")
+    img_url = request.get_json().get("imgUrl")
+    
+    new_animal = crud.create_animal(name=name,
+                       species=species,
+                       gender=gender,
+                       age=age,
+                       description=description,
+                       img_url=img_url)
+    
+    return jsonify({ "success": True, "animalAdded": new_animal })
+
 """Flask Manager routes"""
 @login_manager.user_loader
 def load_user(user_id):
     """LoginManager's user_loader"""
     
-    return flaskr.crud.get_user_by_id(user_id=user_id)
+    return crud.get_user_by_id(user_id=user_id)
 
 @login_manager.unauthorized_handler
 def unauthorized():

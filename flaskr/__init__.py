@@ -12,4 +12,4 @@ app.jinja_env.undefined = StrictUndefined
 connect_to_db(app)
 
 
-from flaskr import views
+from flaskr import routes
