@@ -1,5 +1,5 @@
-from flaskr.model import db, connect_to_db, User, Admin, Animal
-from flaskr import app
+from shelter.model import db, connect_to_db, User, Admin, Animal
+from shelter import app
 from werkzeug.security import generate_password_hash
 import os
 import csv
