@@ -67,20 +67,20 @@ def get_all_animals():
     
     return Animal.query.all()
 
-def get_animals_as_dict():
+def get_animal_dicts_list():
     """Returns a dictionary of animal object dictionaries"""
     
     animals = Animal.query.all()
     
-    animals_dict = {}
+    animals_list = []
     
     for animal in animals:
         animal_dict = {}
         for column in animal.__table__.columns:
             animal_dict[column.name] = getattr(animal, column.name)
-        animals_dict[animal.id] = animal_dict
+        animals_list.append(animal_dict)
     
-    return animals_dict
+    return animals_list
 
 def get_animal_by_id(animal_id):
     """Returns an Animal object from DB matching provided id"""
