@@ -33,7 +33,7 @@ def register_animal():
     description = request.form.get("description")
     adoption_status = request.form.get("adoption_status")
     
-    print(type(age)) # --> it's a str
+    # print(type(age)) # --> it's a str
     new_animal = crud.create_animal(species=species,
                                            name=name,
                                            gender=gender,
@@ -41,10 +41,10 @@ def register_animal():
                                            description=description,
                                            adoption_status=adoption_status)   
     if new_animal['code'] == 'success':
-        flash(f"New {species} added to database")
+        flash(f"New {species} added to database", category="success")
         return redirect(url_for('animals'))
     else:
-        flash("Erroneous")
+        flash("Erroneous", category="danger")
         return redirect(url_for('animals'))
 
 """Login Routes n stuff"""
@@ -73,10 +73,10 @@ def register_admin():
                                         clearance=clearance)
     
     if new_admin['code'] == "success":
-        flash(f"New user created: {new_admin['admin'].username}")
+        flash(f"New user created: {new_admin['admin'].username}", category="success")
         return redirect(url_for('admin_init'))
     else:
-        flash(f"Error: new_admin={new_admin}")
+        flash(f"Error: new_admin={new_admin}", category="danger")
         return redirect(url_for('admin_init'))
 
 @app.route('/login-admin', methods=["POST"])
@@ -113,10 +113,10 @@ def register_user():
     print(new_user['user'].email)
     
     if new_user['code'] == "success":
-        flash(f"New user created: {new_user['user'].username}")
+        flash(f"New user created: {new_user['user'].username}", category="success")
         return redirect(url_for('user_init'))
     else:
-        flash(f"Error: new_user={new_user}")
+        flash(f"Error: new_user={new_user}", category="danger")
         return redirect(url_for('user_init'))
     
 @app.route('/login-user', methods=["POST"])
