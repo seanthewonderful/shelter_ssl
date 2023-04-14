@@ -9,6 +9,7 @@ os.system("createdb ssl_adoption")
 # with app.app_context():
 #     db.create_all()
 # connect_to_db(app)
+# connect_to_db(app)
 app.app_context().push()
 db.create_all()
 
@@ -18,17 +19,17 @@ db.session.commit()
 
 with open('animals.csv') as animals:
     animal_file = csv.reader(animals, delimiter=',')
-    line = 0
+    row = 0
     for line in animal_file:
-        if line == 0:
-            line += 1
+        if row == 0:
+            row += 1
         else:
             new_animal = Animal(species=line[0],
                                 name=line[1],
                                 gender=line[2],
                                 age=line[3],
                                 img_url=line[4],
-                                housebroken=line[5],
+                                housebroken=eval(line[5]),
                                 description=line[6])
             db.session.add(new_animal)
         
