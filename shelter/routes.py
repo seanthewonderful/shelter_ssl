@@ -130,7 +130,7 @@ def login_user():
 def animals_json():
     """Return all animals from db"""
     
-    animals = crud.get_animals_as_dict()
+    animals = crud.get_animal_dicts_list()
     print(animals)
     
     return jsonify(animals)

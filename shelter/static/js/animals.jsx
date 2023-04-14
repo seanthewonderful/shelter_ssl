@@ -3,7 +3,7 @@ function AnimalCard(props) {
       <div className="card">
         <p>Species: {props.species} </p>
         <p>Name: {props.name} </p>
-        <img src={props.imgUrl} alt="image" />
+        <img src={props.imgUrl} alt="image" style={{ height: "300px", width: "300px" }} />
         <p>Description: {props.description} </p>
       </div>
     );
@@ -103,13 +103,13 @@ function AnimalCardContainer() {
         .then((response) => response.json())
         // .then((data) => setCards(data.cards))
         .then((data) => {
-          const temp_arr = []
-          for (const [key, value] of Object.entries(data)) {
+          // const temp_arr = []
+          // for (const [key, value] of Object.entries(data)) {
             // console.log(`Key: ${key} | Value: ${value}`)
             // temp_arr.push({ key = value })
-          }
-          console.log(temp_arr)
-        })
+            console.log(data)
+            setCards(data)
+          })
     }, []);
 
     const animalCards = [];
@@ -124,7 +124,7 @@ function AnimalCardContainer() {
           gender={currentCard.gender}
           age={currentCard.age}
           description={currentCard.description}
-          img_url={currentCard.img_url}
+          imgUrl={currentCard.img_url}
           />
       );
     }
