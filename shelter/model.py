@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 from flask_login import UserMixin
 import os
-from shelter import db, app, login_manager
+from shelter import db, login_manager
 
 
 """Flask login_manager functions"""
-@login_manager.user_loader
-def load_user(user_id):
-    """LoginManager's user_loader"""
+# @login_manager.user_loader
+# def load_user(user_id):
+#     """LoginManager's user_loader"""
     
-    return User.query.get(int(user_id))
+#     return User.query.get(int(user_id))
 
 @login_manager.user_loader
 def load_admin(admin_id):
@@ -97,8 +97,7 @@ def connect_to_db(app):
     print("Connected to DB")
     
     
-if __name__ == "__main__":
-    os.system("source config.sh")
-    # from shelter import app
-    connect_to_db(app)
+# if __name__ == "__main__":
+#     os.system("source config.sh")
+#     connect_to_db(app)
     

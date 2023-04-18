@@ -99,7 +99,8 @@ def login_admin():
     
     if administrator:
         if check_password_hash(administrator.password, password):
-            login_user(administrator, remember=request.form.get("remember"))
+            login_user(administrator)
+            # login_user(administrator, remember=request.form.get("remember"))
             next_page = request.args.get("next")
             # new query string 
         else: 
@@ -114,7 +115,7 @@ def logout():
     
     logout_user()
     
-    return redirect(url_for('/'))
+    return redirect(url_for('home'))
 
 @app.route('/users')
 def user_init():
@@ -151,10 +152,6 @@ def register_user():
         flash(f"Error: new_user={new_user}", category="danger")
         return redirect(url_for('user_init'))
     
-@app.route('/login-user', methods=["POST"])
-def login_user():
-    
-    pass
 
 """Animal data routes"""
 

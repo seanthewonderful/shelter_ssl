@@ -6,6 +6,11 @@ Administrator Portal Entrance
 
 {% block content %}
 
+{% if current_user.is_authenticated %}
+<h1>Welcome, {{ current_user.username }}</h1>
+<a type="button" href="{{ url_for('logout') }}">Logout</a>
+{% endif %}
+
 <div class="d-flex row">
 
     <div class="container col justify-content-md-center m-4">
