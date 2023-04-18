@@ -3,4 +3,5 @@ Model db tables with relationships
 √ Create seed data for animals
 Create routes for admins/users logins
 √ Create pages for register/login
-Create React page to display dogs
+√ Create React page to display dogs
+React form to submit a new animal and add to display

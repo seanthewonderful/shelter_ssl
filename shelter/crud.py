@@ -1,6 +1,6 @@
 from shelter import db
 from shelter.model import User, Admin, Animal
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 
 """Admins"""
 
@@ -22,6 +22,11 @@ def get_admin_by_id(admin_id):
     """Returns Admin object from db with the provided id"""
     
     return Admin.query.filter_by(id=admin_id).first()
+
+def get_admin_by_username(username):
+    """Returns Admin object from db with the provided username"""
+    
+    return Admin.query.filter_by(username=username).first()
 
 
 """Users"""
@@ -60,7 +65,12 @@ def create_animal(species, name, gender, age, description, img_url):
     db.session.add(new_animal)
     db.session.commit()
     
-    return {'code': 'success', 'animal': new_animal}
+    new_animal_dict = {}
+    
+    for column in new_animal.__table__.columns:
+        new_animal_dict[column.name] = getattr(new_animal, column.name)
+    
+    return new_animal_dict
 
 def get_all_animals():
     """Returns all animals from db"""

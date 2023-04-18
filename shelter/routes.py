@@ -1,12 +1,12 @@
 from flask import (Flask, render_template, redirect, request, url_for, flash, jsonify)
-from flask_login import (LoginManager, login_user, logout_user, login_required, current_user)
+from flask_login import login_user, logout_user, login_required, current_user
 from shelter import app
 from shelter.forms import (RegisterAdmin, RegisterUser, LoginForm, NewAnimalForm)
 import shelter.crud as crud
+from werkzeug.security import check_password_hash
 
-
-login_manager = LoginManager()
-login_manager.init_app(app)
+# login_manager = LoginManager(app)
+# login_manager.init_app(app)
 
 @app.route('/')
 def home():
@@ -51,6 +51,9 @@ def register_animal():
 @app.route('/administrators')
 def admin_init():
     
+    # if current_user.is_authenticated:
+    #     return redirect()
+    
     register_form = RegisterAdmin()
     login_form = LoginForm()
     
@@ -78,11 +81,40 @@ def register_admin():
     else:
         flash(f"Error: new_admin={new_admin}", category="danger")
         return redirect(url_for('admin_init'))
+    
+@app.route('/account')
+@login_required
+def account():
+    
+    return render_template("account.html", title="Account")
 
 @app.route('/login-admin', methods=["POST"])
 def login_admin():
+    """Log in an Admin"""
     
-    pass
+    username = request.form.get("username")
+    password = request.form.get("password")
+    
+    administrator = crud.get_admin_by_username(username=username)
+    
+    if administrator:
+        if check_password_hash(administrator.password, password):
+            login_user(administrator, remember=request.form.get("remember"))
+            next_page = request.args.get("next")
+            # new query string 
+        else: 
+            flash("Password incorrect.", category="warning")  
+    else:
+        flash("No Administrators found with that username.", category="warning")
+    
+    return redirect(url_for(next_page)) if next_page else redirect(url_for("admin_init"))
+
+@app.route('/logout')
+def logout():
+    
+    logout_user()
+    
+    return redirect(url_for('/'))
 
 @app.route('/users')
 def user_init():
@@ -131,13 +163,14 @@ def animals_json():
     """Return all animals from db"""
     
     animals = crud.get_animal_dicts_list()
-    print(animals)
     
     return jsonify(animals)
 
-@app.route('/add-card', methods=["POST"])
-def add_card():
-    """Add a new card to the DB"""
+@app.route('/add-animal', methods=["POST"])
+def add_animal():
+    """Add a new animal to the DB and return data to render a card"""
+    
+    print("HIT add-animal")
     
     name = request.get_json().get("name")
     species = request.get_json().get("species")
@@ -149,21 +182,11 @@ def add_card():
     new_animal = crud.create_animal(name=name,
                        species=species,
                        gender=gender,
-                       age=age,
+                       age=int(age),
                        description=description,
                        img_url=img_url)
     
-    return jsonify({ "success": True, "animalAdded": new_animal })
+    return jsonify(new_animal)
 
-"""Flask Manager routes"""
-@login_manager.user_loader
-def load_user(user_id):
-    """LoginManager's user_loader"""
-    
-    return crud.get_user_by_id(user_id=user_id)
 
-@login_manager.unauthorized_handler
-def unauthorized():
-    """Deny unauthorized users"""
-    return "Sorry, you must be logged in to view this page"
 

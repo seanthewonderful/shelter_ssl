@@ -1,9 +1,29 @@
 from dataclasses import dataclass
 from flask_login import UserMixin
 import os
-from shelter import db, app
+from shelter import db, app, login_manager
 
-class User(UserMixin, db.Model):
+
+"""Flask login_manager functions"""
+@login_manager.user_loader
+def load_user(user_id):
+    """LoginManager's user_loader"""
+    
+    return User.query.get(int(user_id))
+
+@login_manager.user_loader
+def load_admin(admin_id):
+    """And one for the Admins"""
+    
+    return Admin.query.get(int(admin_id))
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    """Deny unauthorized users"""
+    
+    return "Please login to view this page"
+
+class User(db.Model, UserMixin):
     """The users table"""
     
     __tablename__ = "users"
@@ -18,7 +38,7 @@ class User(UserMixin, db.Model):
     def __repr__(self) -> str:
         return f"<User: {self.username}>"
     
-class Admin(UserMixin, db.Model):
+class Admin(db.Model, UserMixin):
     """The Administrator table"""
     
     __tablename__ = "admins"

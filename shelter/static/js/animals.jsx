@@ -18,23 +18,20 @@ function AddAnimalCard(props) {
   const [imgUrl, setImgUrl] = React.useState("")
 
   function addNewCard() {
-    fetch("/add-card", {
+    fetch("/add-animal", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": document.getElementById("csrf-token").getAttribute("content")
       },
-      body: JSON.stringify({ name: name, 
-                            species: species, 
-                            gender: gender, 
-                            age: age, 
-                            description: description, 
-                            imgUrl: imgUrl 
-                          }),
+      body: JSON.stringify({ name, species, gender, age, description, imgUrl }),
     })
+      // console.log(name, species, gender, age, description, imgUrl)
       .then((response) => response.json())
       .then((jsonResponse) => {
-        const cardAdded = jsonResponse.cardAdded
-        props.addCard(cardAdded)
+        // const cardAdded = jsonResponse.cardAdded
+        console.log(jsonResponse)
+        props.addCard(jsonResponse)
       })
   }
 
@@ -103,11 +100,6 @@ function AnimalCardContainer() {
         .then((response) => response.json())
         // .then((data) => setCards(data.cards))
         .then((data) => {
-          // const temp_arr = []
-          // for (const [key, value] of Object.entries(data)) {
-            // console.log(`Key: ${key} | Value: ${value}`)
-            // temp_arr.push({ key = value })
-            console.log(data)
             setCards(data)
           })
     }, []);
@@ -115,7 +107,6 @@ function AnimalCardContainer() {
     const animalCards = [];
 
     for (const currentCard of cards) {
-      console.log(currentCard)
       animalCards.push(
         <AnimalCard
           key={currentCard.name}
