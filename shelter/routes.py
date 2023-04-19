@@ -22,37 +22,9 @@ def animals():
     
     return render_template('animals.html', form=form)
 
-@app.route('/register-animal', methods=["POST"])
-def register_animal():
-    """Register a new animal to the DB"""
-    
-    species = request.form.get("species")
-    name = request.form.get("name", "")
-    gender = request.form.get("gender")
-    age = request.form.get("age", 0)
-    description = request.form.get("description")
-    adoption_status = request.form.get("adoption_status")
-    
-    # print(type(age)) # --> it's a str
-    new_animal = crud.create_animal(species=species,
-                                           name=name,
-                                           gender=gender,
-                                           age=age,
-                                           description=description,
-                                           adoption_status=adoption_status)   
-    if new_animal['code'] == 'success':
-        flash(f"New {species} added to database", category="success")
-        return redirect(url_for('animals'))
-    else:
-        flash("Erroneous", category="danger")
-        return redirect(url_for('animals'))
-
 """Login Routes n stuff"""
 @app.route('/administrators')
 def admin_init():
-    
-    # if current_user.is_authenticated:
-    #     return redirect()
     
     register_form = RegisterAdmin()
     login_form = LoginForm()
@@ -71,29 +43,32 @@ def register_admin():
     clearance = request.form["clearance"]
     
     new_admin = crud.create_admin(username=username,
-                                        password=password,
-                                        email=email,
-                                        clearance=clearance)
+                                  password=password,
+                                  email=email,
+                                  clearance=clearance)
     
     if new_admin['code'] == "success":
-        flash(f"New user created: {new_admin['admin'].username}", category="success")
+        flash(f"New user created: {new_admin['admin'].username}", 
+              category="success")
         return redirect(url_for('admin_init'))
     else:
-        flash(f"Error: new_admin={new_admin}", category="danger")
+        flash(f"Error: new_admin={new_admin}", 
+              category="danger")
         return redirect(url_for('admin_init'))
     
 @app.route('/account')
 @login_required
 def account():
     
-    return render_template("account.html", title="Account")
+    return render_template("account.html", 
+                           title="Account")
 
 @app.route('/login-admin', methods=["POST"])
 def login_admin():
     """Log in an Admin"""
     
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = request.get_json().get("username")
+    password = request.get_json().get("password")
     
     administrator = crud.get_admin_by_username(username=username)
     
@@ -101,14 +76,18 @@ def login_admin():
         if check_password_hash(administrator.password, password):
             login_user(administrator)
             # login_user(administrator, remember=request.form.get("remember"))
-            next_page = request.args.get("next")
+            # next_page = request.args.get("next")
             # new query string 
+            return jsonify({ "code": 200, "username": administrator.username })
         else: 
-            flash("Password incorrect.", category="warning")  
+            flash("Password incorrect.", category="warning")
+            return jsonify({ "code": 401, "message": "Password incorrect" })
     else:
-        flash("No Administrators found with that username.", category="warning")
+        flash("No Administrators found with that username.", 
+              category="warning")
+        return jsonify({ "code": 401, "message": "No administrators found with that username" })
     
-    return redirect(url_for(next_page)) if next_page else redirect(url_for("admin_init"))
+    # return redirect(url_for(next_page)) if next_page else redirect(url_for("admin_init")) 
 
 @app.route('/logout')
 def logout():
@@ -138,11 +117,10 @@ def register_user():
     zipcode = request.form["zipcode"]
     
     new_user = crud.create_user(username=username,
-                                       password=password,
-                                       email=email, 
-                                       zipcode=zipcode)
-    
-    print(new_user)
+                                password=password,
+                                email=email, 
+                                zipcode=zipcode)
+
     print(new_user['user'].email)
     
     if new_user['code'] == "success":
@@ -177,11 +155,11 @@ def add_animal():
     img_url = request.get_json().get("imgUrl")
     
     new_animal = crud.create_animal(name=name,
-                       species=species,
-                       gender=gender,
-                       age=int(age),
-                       description=description,
-                       img_url=img_url)
+                                    species=species,
+                                    gender=gender,
+                                    age=int(age),
+                                    description=description,
+                                    img_url=img_url)
     
     return jsonify(new_animal)
 
