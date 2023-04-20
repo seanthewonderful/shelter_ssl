@@ -22,4 +22,10 @@ login_manager.login_view = "login" # set to "login", as if it were a 'url_for("l
 login_manager.login_message_category = "info" # how to set the message category, like a flash msg
 
 
-from shelter import routes
+from shelter.admins.routes import admins
+from shelter.animals.routes import animals
+from shelter.main.routes import main
+
+app.register_blueprint(admins)
+app.register_blueprint(animals)
+app.register_blueprint(main)
