@@ -59,15 +59,6 @@ class Animal(db.Model):
     
     __tablename__ = "animals"
     
-    # species: str
-    # name: str
-    # gender: str
-    # age: int
-    # img_url: str
-    # description: str
-    # housebroken: bool
-    # adoption_status: bool
-    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     species = db.Column(db.String(50))
@@ -97,7 +88,7 @@ def connect_to_db(app):
     print("Connected to DB")
     
     
-# if __name__ == "__main__":
-#     os.system("source config.sh")
-#     connect_to_db(app)
+if __name__ == "__main__":
+    from flask import current_app
+    connect_to_db(current_app)
     

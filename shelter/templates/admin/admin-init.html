@@ -9,13 +9,13 @@ Administrator Portal Entrance
 {#
 {% if current_user.is_authenticated %}
 <h1>Welcome, {{ current_user.username }}</h1>
-<a type="button" href="{{ url_for('logout') }}">Logout</a>
+<a type="button" href="{{ url_for('admins.logout') }}">Logout</a>
 {% endif %}
 
 <div class="d-flex row">
 
     <div class="container col justify-content-md-center m-4">
-        <form method="POST" action="{{ url_for('register_admin') }}">
+        <form method="POST" action="{{ url_for('admins.register_admin') }}">
             <h3>Register a new Administrator</h3>
             {{ register_form.csrf_token }}
             <div class="form-group m-2 col-4">
@@ -41,7 +41,7 @@ Administrator Portal Entrance
     </div>
 
     <div class="container col justify-content-md-center m-4">
-        <form method="POST" action="{{ url_for('login_admin') }}">
+        <form method="POST" action="{{ url_for('admins.login_admin') }}">
             <h3>Login as an Administrator</h3>
             {{ login_form.csrf_token }}
             <div class="form-group m-2 col-4">

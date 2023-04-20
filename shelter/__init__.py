@@ -2,30 +2,33 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from jinja2 import StrictUndefined
 from flask_sqlalchemy import SQLAlchemy
-from os import environ
-from flask_login import (LoginManager, login_user, logout_user, login_required, current_user)
-# from shelter.model import connect_to_db
+from flask_login import LoginManager
+from config import Config
 
-app = Flask(__name__)
-app.secret_key = environ["SECRET_KEY"]
-app.config["DEBUG_TB_INTERCEPT_REDIRECTS"]=False
-app.config['SQLALCHEMY_DATABASE_URI'] = environ['POSTGRES_URI']
-app.config["SQLALCHEMY_ECHO"] = False
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['FLASK_DEBUG'] = True
-csrf = CSRFProtect(app)
-app.jinja_env.undefined = StrictUndefined
-db = SQLAlchemy(app)
-# connect_to_db(app)
-login_manager = LoginManager(app)
-login_manager.login_view = "login" # set to "login", as if it were a 'url_for("login")'
+csrf = CSRFProtect()
+db = SQLAlchemy()
+login_manager = LoginManager()
+
+login_manager.login_view = "admins.login" # set to "login", as if it were a 'url_for("admins.login")'
 login_manager.login_message_category = "info" # how to set the message category, like a flash msg
 
 
-from shelter.admins.routes import admins
-from shelter.animals.routes import animals
-from shelter.main.routes import main
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    
+    csrf.init_app(app)
+    db.init_app(app)
+    login_manager.init_app(app)
+    
+    app.jinja_env.undefined = StrictUndefined
+    
+    from shelter.admins.routes import admins
+    from shelter.animals.routes import animals_bp
+    from shelter.main.routes import main
 
-app.register_blueprint(admins)
-app.register_blueprint(animals)
-app.register_blueprint(main)
+    app.register_blueprint(admins)
+    app.register_blueprint(animals_bp)
+    app.register_blueprint(main)
+    
+    return app

@@ -7,7 +7,6 @@ Animals for Adoption
 {% block content %}
 <div class="magic-div" id="magic-div"></div>
 
-<a type="button" href="{{ url_for('user_init') }}">Users</a>
-<a type="button" href="{{ url_for('admin_init') }}">Administrators</a>
-<a type="button" href="{{ url_for('animals') }}">Animals Page</a>
+<a type="button" href="{{ url_for('admins.admin_init') }}">Administrators</a>
+<a type="button" href="{{ url_for('animals_bp.animals') }}">Animals Page</a>
 {% endblock %}
