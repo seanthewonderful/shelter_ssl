@@ -15,7 +15,7 @@ login_manager.login_message_category = "info" # how to set the message category,
 
 def create_app(config_class=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
     
     csrf.init_app(app)
     db.init_app(app)
@@ -26,9 +26,11 @@ def create_app(config_class=Config):
     from shelter.admins.routes import admins
     from shelter.animals.routes import animals_bp
     from shelter.main.routes import main
+    from shelter.errors.handlers import errors
 
     app.register_blueprint(admins)
     app.register_blueprint(animals_bp)
     app.register_blueprint(main)
+    app.register_blueprint(errors)
     
     return app
