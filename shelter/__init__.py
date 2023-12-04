@@ -15,6 +15,10 @@ login_manager.login_message_category = "info" # how to set the message category,
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    
+    import os
+    os.system("source config.sh")
+    
     app.config.from_object(config_class)
     
     csrf.init_app(app)
